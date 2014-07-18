@@ -1,5 +1,6 @@
 from unittest import TestCase
 from change.util import ChangeMaker
+from change.util import combinations
 
 
 # test change maker
@@ -18,8 +19,9 @@ class ChangeMakerTests(TestCase):
         self.assertEqual(sum(lists[1]), 8)
         self.assertEqual(lists[0].find(5) < 0 or lists[1].find(5) < 0, True)
 
-
-
+    def test_combinations(self):
+        result = combinations([1, 5, 10, 25], 8)
+        self.assertEqual(len(result), 2)
 
 """
 >>> cm = ChangeMaker([25, 10, 5, 1])
