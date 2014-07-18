@@ -13,11 +13,13 @@ class ChangeMakerTests(TestCase):
 
     def test_change(self):
         self.assertEqual(self.us_no_penny.change(8), [])
-        lists = self.us_penny.change(8)
+        lists = self.us_coins.change(8)
         self.assertEqual(len(lists), 2)
-        self.assertEqual(sum(lists[0]), 8)
-        self.assertEqual(sum(lists[1]), 8)
-        self.assertEqual(lists[0].find(5) < 0 or lists[1].find(5) < 0, True)
+
+        l1, l2 = lists
+        self.assertEqual(sum(l1), 8)
+        self.assertEqual(sum(l2), 8)
+        self.assertEqual(l1.index(5) >= 0 or l2.index(5) >= 0, True)
 
     def test_combinations(self):
         result = combinations([1, 5, 10, 25], 8)
