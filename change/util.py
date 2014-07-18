@@ -16,7 +16,8 @@ def combinations(values, total):
         elif list_of_values:  # still more values to try
             value = list_of_values[-1]
             if value <= total_sum:
-                return [value] + helper(list_of_values, total_sum - value)
+                number_of_cells = total_sum / value
+                return ([value] * number_of_cells) + helper(list_of_values, total_sum - (value * number_of_cells))
             elif value > total_sum:  # another case where the value is too big
                 # coin is too big, pop it off
                 list_of_values.pop()
@@ -29,8 +30,6 @@ def combinations(values, total):
         result = helper(values[:], total)
         if result and sum(result) == total:
             # remove the biggest to attempt another combination
-            print "result = ", result
-            print "result max is: ", max(result)
             values.remove(max(result))
             results.append(result)
         else:
@@ -40,7 +39,6 @@ def combinations(values, total):
             by not performing unecessary traversals through
             the values list
             """
-            print "results = ", results
             return results
 
 
@@ -53,6 +51,8 @@ class ChangeMaker:
         # to get the next largest value
         coins.sort()
         self._coins = coins
+        # cache of amounts mapped to results
+        self._cache = {}
 
     def change(self, amount):
         # for each combination
