@@ -55,11 +55,22 @@ class ChangeMaker:
         self._cache = {}
 
     def change(self, amount):
+        """
+        returns a list of lists of possible ways to distribute
+        the change
+        :param amount: amount to make change
+        :return: list of lists of ints
+        """
         # for each combination
         return combinations(self._coins[:], amount)
 
     def count_change(self, amount):
+        """
+        returns the total # of ways to make change with this amount
+        :param amount:
+        :return:
+        """
         # completely unoptimized
-        return len(self.count_change(amoutn))
+        return len(self.change(amount))
 
 
