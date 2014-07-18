@@ -51,7 +51,7 @@ class ChangeMaker:
         # sort coins into ascending order so we can
         # use a list as a stack and just self._coins.pop()
         # to get the next largest value
-        coins.sort(reverse=False)
+        coins.sort()
         self._coins = coins
 
     def change(self, amount):
