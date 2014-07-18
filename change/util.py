@@ -45,6 +45,11 @@ def combinations(values, total):
 class ChangeMaker:
 
     def __init__(self, coins):
+        """
+        requires a list of integers as input
+        :param coins: list of integers
+        :return: ChangeMaker object
+        """
         assert isinstance(coins, list) and len(coins) > 0
         # sort coins into ascending order so we can
         # use a list as a stack and just self._coins.pop()
