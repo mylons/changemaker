@@ -21,6 +21,9 @@ class ChangeMakerTests(TestCase):
         self.assertEqual(sum(l2), 8)
         self.assertEqual(l1.index(5) >= 0 or l2.index(5) >= 0, True)
 
+    def test_count_change(self):
+        self.assertEqual(self.us_coins.count_change(8), 2)
+
     def test_combinations(self):
         result = combinations([1, 5, 10, 25], 8)
         self.assertEqual(len(result), 2)
