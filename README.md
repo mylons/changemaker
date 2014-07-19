@@ -72,6 +72,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 ## Discussion on run time and complexity
 
+#### Recursion 
 I decided to do this recursively, because it's an interview question. You have to show off a little bit,
 if you can. This in turn exposed something I rarely run into in python, the recursion limit! Also, this 
 is one of those classic problems that lends itself well to a recursive solution. IFF the problem statement
@@ -101,7 +102,7 @@ Python doesn't support Tail Recursion, and maybe never will: http://neopythonic.
 The official advice is to move to an iterative solution if you're traversing large lists. Doing that would allow
 this solution to expand, but it would expand outside of the problem domain, in my opinion. Sort of like over optimizing
 for the sake of optimization.
-
+#### Run Time and Efficiency
 The run time of ```ChangeMaker.count_change(amount)``` is, at the worst case, O(n^2), where n is the number of coins. 
 I say this because, count_change loops over the coins, and for each coin calls combinations, which in turn iterates
 over each coin. So, there is some set of inputs (like using the max number of coins, and then the max amount of change) 
