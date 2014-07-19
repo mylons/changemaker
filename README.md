@@ -84,7 +84,7 @@ This is a problem in cases where you have something like this:
 ```
 The final combination of ways to make change is a list of 1's in this case,
 and it would recurse 1000 times to perform this. It's easily optimized out by taking advantage of python's
-[1] * 1000, and then remove that total sum from the input to the next call to helper() removes basically
+[1] * 1000, and then remove that total sum from the input to the next call to ```_combinations()``` removes basically
 997 calls to that function (1000 - 3 attempts via 5, 10, 25 being tried first).
 
 Therefore the combinations function can take an input of ~500-900 unique integers, depending on the change to calculate. 
