@@ -72,7 +72,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 ## Discussion on run time and complexity
 
-The initial change.util.combinations function was completely recursive. It would recurse in the subtraction
+The initial combinations function was completely recursive ( 97b3d9de257e9987c1932e27afc8015df3686c86 ). It would recurse in the subtraction
 from the total amount, and in traversing the list of input integers. I like solutions like these
 because if the language supports something like Tail Recursion, it can optimize away the
 seemingly inefficient, yet more elegant code
@@ -94,10 +94,6 @@ I thought about trying a more efficient approach to ```ChangeMaker.count_change(
 recursion limit in python, combinations only recurses 1000 times, and realistically will only be called
 ~10 times in a real world scenario?
 
-Please put up the code on your GitHub account and provide a README on how to run your program along with the time and space complexity discussion mentioned above.
 
-Also, please write this in Python 2.7, if possible -- we are part of the 98% that use it. ;)
 
-Thanks! We really look forward to seeing what you come up with.
 
-Also, please feel free to ask me any questions.
