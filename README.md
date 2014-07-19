@@ -95,6 +95,11 @@ I thought about trying a more efficient approach to ```ChangeMaker.count_change(
 recursion limit in python, combinations can only recurse 1000 times, and realistically will only be called
 ~10 times in a real world scenario?
 
+I also copy the ```ChangeMaker._coins``` list in the call to ```_combinations()```. The reason for this
+is that you can use the list as a stack in the ```_combinations()``` function which makes 
+managing handling the coins much simpler. This, again, shouldn't be a huge cost because the list is only
+going to be <1000 integers. 
+
 The space requirements will grow linearly with the amount of change to return.
 
 I thought empirical testing would be interesting to see how the memory grows.  
