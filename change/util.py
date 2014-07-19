@@ -1,48 +1,6 @@
 __author__ = 'mylons'
 
 
-def combinations(values, total):
-    """
-    loosely modeled after the itertools combinations
-    :param values: list of integers
-    :param total: the sum the combination should sum to
-    :return: list of lists of combinations: [[1, 2, 3], [4, 5, 6]]
-    """
-    def helper(list_of_values, total_sum):
-        if total_sum <= 0:
-            # base case is an empty list
-            # (adding an empty list to a list does nothing in python)
-            return []
-        elif list_of_values:  # still more values to try
-            value = list_of_values[-1]
-            if value <= total_sum:
-                number_of_cells = total_sum / value
-                return ([value] * number_of_cells) + helper(list_of_values, total_sum - (value * number_of_cells))
-            elif value > total_sum:  # another case where the value is too big
-                # coin is too big, pop it off
-                list_of_values.pop()
-                return [] + helper(list_of_values, total_sum)
-        else:
-            return []
-
-    results = []
-    while values:
-        result = helper(values[:], total)
-        if result and sum(result) == total:
-            # remove the biggest to attempt another combination
-            values.remove(max(result))
-            results.append(result)
-        else:
-            """
-            nothing more to be done here
-            optimizes the function slightly
-            by not performing unecessary traversals through
-            the values list
-            """
-            return results
-    # exhausted values, and helper consistently returned results
-    return results
-
 class ChangeMaker:
 
     def __init__(self, coins):
@@ -57,8 +15,6 @@ class ChangeMaker:
         # to get the next largest value
         coins.sort()
         self._coins = coins
-        # cache of amounts mapped to results
-        self._cache = {}
 
     def change(self, amount):
         """
@@ -68,7 +24,25 @@ class ChangeMaker:
         :return: list of lists of ints
         """
         # for each combination
-        return combinations(self._coins[:], amount)
+        #return combinations(self._coins[:], amount)
+        values = self._coins[:]  # copy the coins, this is deleterious
+        results = []
+        while values:
+            result = self._combinations(values[:], amount)
+            if result and sum(result) == amount:
+                # remove the biggest to attempt another combination
+                values.remove(max(result))
+                results.append(result)
+            else:
+                """
+                nothing more to be done here
+                optimizes the function slightly
+                by not performing unecessary traversals through
+                the values list
+                """
+                return results
+        # exhausted values, and helper consistently returned results
+        return results
 
     def count_change(self, amount):
         """
@@ -79,4 +53,26 @@ class ChangeMaker:
         # completely unoptimized
         return len(self.change(amount))
 
+    def _combinations(self, values, total):
+        """
+        loosely modeled after the itertools combinations
+        :param values: list of integers
+        :param total: the sum the combination should sum to
+        :return: list of lists of combinations: [[1, 2, 3], [4, 5, 6]]
+        """
+        if total <= 0:
+            # base case is an empty list
+            # (adding an empty list to a list does nothing in python)
+            return []
+        elif values:  # still more coins to try
+            value = values[-1]
+            if value <= total:
+                number_of_cells = total / value
+                return ([value] * number_of_cells) + self._combinations(values, total - (value * number_of_cells))
+            elif value > total:  # another case where the coin is too big
+                # coin is too big, pop it off
+                values.pop()
+                return [] + self._combinations(values, total)
+        else:  # the other base case, no more coins
+            return []
 
