@@ -55,7 +55,7 @@ class ChangeMaker:
 
     def _combinations(self, values, total):
         """
-        loosely modeled after the itertools combinations
+        finds combinations of coins that sum to total
         :param values: list of integers
         :param total: the sum the combination should sum to
         :return: list of lists of combinations: [[1, 2, 3], [4, 5, 6]]
