@@ -72,6 +72,13 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 ## Discussion on run time and complexity
 
+#### General Design
+I chose to be minimalistic in my approach to this. The problem states returning primitives and 
+built in data structures instead of built types. Also, since the logic of the combinations function
+is geared towards a list input of integers, and a sum to achieve, it seems pretty specific to the 
+change problem. It is written in a way that the function could be graduated to it's own
+module/class, etc.
+
 #### Recursion 
 I decided to do this recursively, because it's an interview question. You have to show off a little bit,
 if you can. This in turn exposed something I rarely run into in python, the recursion limit! Also, this 
