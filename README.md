@@ -87,13 +87,30 @@ and it would recurse 1000 times to perform this. It's easily optimized out by ta
 [1] * 1000, and then remove that total sum from the input to the next call to helper() removes basically
 997 calls to that function (1000 - 3 attempts via 5, 10, 25 being tried first).
 
-Therefore the combinations function can take an input of 1000 unique integers. There is no currency
-I know of that has support for this # of unique denominations.
+Therefore the combinations function can take an input of ~500-900 unique integers, depending on the change to calculate. 
+There is no currency I know of that has support for this number of unique denominations. Therefore, I'm assuming
+this is OK.
 
 I thought about trying a more efficient approach to ```ChangeMaker.count_change(#)```, but due to the
-recursion limit in python, combinations only recurses 1000 times, and realistically will only be called
+recursion limit in python, combinations can only recurse 1000 times, and realistically will only be called
 ~10 times in a real world scenario?
 
+The space requirements will grow linearly with the amount of change to return.
+
+I thought empirical testing would be interesting to see how the memory grows.  
+```
+>>> import sys
+>>> cm = ChangeMaker([i for i in range(1, 998)])
+>>> a = cm.change(900)
+>>> sys.getsizeof(a)
+7992
+>>> a = cm.change(450)
+>>> sys.getsizeof(a)
+3768
+>>> 3768.0 / 7992.0 
+0.47147147147147145
+```
+It seems to grow slightly less than linear! 
 
 
 
