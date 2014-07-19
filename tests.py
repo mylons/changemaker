@@ -1,6 +1,5 @@
 from unittest import TestCase
 from change.util import ChangeMaker
-from change.util import combinations
 
 
 # test change maker
@@ -10,6 +9,12 @@ class ChangeMakerTests(TestCase):
         # assumes no common use of 50 cent piece when calling it us
         self.us_coins = ChangeMaker([25, 10, 5, 1])
         self.us_no_penny = ChangeMaker([25, 10, 5])
+        self.small = ChangeMaker([2, 1])
+
+    def test_coins_are_sorted(self):
+        # this might be frivolous, but _combinations relies on
+        # a certain order
+        self.assertListEqual(self.us_coins._coins, [1, 5, 10, 25])
 
     def test_change(self):
         self.assertEqual(self.us_no_penny.change(8), [])
@@ -26,9 +31,10 @@ class ChangeMakerTests(TestCase):
         self.assertEqual(self.us_no_penny.count_change(8), 0)
 
     def test_combinations(self):
-        result = combinations([1, 5, 10, 25], 8)
-        self.assertEqual(len(result), 2)
+        result = self.small._combinations([1, 5, 10, 25], 8)
+        self.assertListEqual(sorted(result), [1, 1, 1, 5])
 
-        result2 = combinations([1, 2], 3)
+        result = self.small._combinations([1, 2], 3)
+        self.assertListEqual(sorted(result), [1, 2])
 
-        self.assertEqual(len(result2), 2)
+
