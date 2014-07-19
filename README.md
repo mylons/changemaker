@@ -72,7 +72,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 ## Discussion on run time and complexity
 
-The initial combinations function was completely recursive ( 97b3d9de257e9987c1932e27afc8015df3686c86 ). It would recurse in the subtraction
+The initial combinations function was completely recursive ( https://github.com/mylons/changemaker/commit/97b3d9de257e9987c1932e27afc8015df3686c86 ). It would recurse in the subtraction
 from the total amount, and in traversing the list of input integers. I like solutions like these
 because if the language supports something like Tail Recursion, it can optimize away the
 seemingly inefficient, yet more elegant code
