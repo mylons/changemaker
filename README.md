@@ -72,10 +72,15 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 ## Discussion on run time and complexity
 
+I decided to do this recursively, because it's an interview question. You have to show off a little bit,
+if you can. This in turn exposed something I rarely run into in python, the recursion limit! Also, this 
+is one of those classic problems that lends itself well to a recursive solution. IFF the problem statement
+required a large number of coins as input, would I have considered doing it iteratively.
+
 The initial combinations function was completely recursive ( https://github.com/mylons/changemaker/commit/97b3d9de257e9987c1932e27afc8015df3686c86 ). It would recurse in the subtraction
 from the total amount, and in traversing the list of input integers. I like solutions like these
 because if the language supports something like Tail Recursion, it can optimize away the
-seemingly inefficient, yet more elegant code
+seemingly inefficient, yet more elegant code.
 
 This is a problem in cases where you have something like this:
 ```
@@ -89,10 +94,22 @@ and it would recurse 1000 times to perform this. It's easily optimized out by ta
 
 Therefore the combinations function can take an input of ~500-900 unique integers, depending on the change to calculate. 
 There is no currency I know of that has support for this number of unique denominations. Therefore, I'm assuming
-this is OK.
+this is OK. 
+
+Python doesn't support Tail Recursion, and maybe never will: http://neopythonic.blogspot.com.au/2009/04/tail-recursion-elimination.html
+
+The official advice is to move to an iterative solution if you're traversing large lists. Doing that would allow
+this solution to expand, but it would expand outside of the problem domain, in my opinion. Sort of like over optimizing
+for the sake of optimization.
+
+The run time of ```ChangeMaker.count_change(amount)``` is, at the worst case, O(n^2), where n is the number of coins. 
+I say this because, count_change loops over the coins, and for each coin calls combinations, which in turn iterates
+over each coin. So, there is some set of inputs (like using the max number of coins, and then the max amount of change) 
+that will force this behavior, but I argue that n^2 is an upper bound, and 
+even then the number of executions is somewhere in the ballpark of <1,000,000 due to the recursion limit.
 
 I thought about trying a more efficient approach to ```ChangeMaker.count_change(#)```, but due to the
-recursion limit in python, combinations can only recurse 1000 times, and realistically will only be called
+recursion limit, combinations can only recurse 1000 times, and realistically will only be called
 ~10 times in a real world scenario?
 
 I also copy the ```ChangeMaker._coins``` list in the call to ```_combinations()```. The reason for this
