@@ -40,7 +40,8 @@ def combinations(values, total):
             the values list
             """
             return results
-
+    # exhausted values, and helper consistently returned results
+    return results
 
 class ChangeMaker:
 

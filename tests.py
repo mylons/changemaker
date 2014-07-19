@@ -23,8 +23,12 @@ class ChangeMakerTests(TestCase):
 
     def test_count_change(self):
         self.assertEqual(self.us_coins.count_change(8), 2)
+        self.assertEqual(self.us_no_penny.count_change(8), 0)
 
     def test_combinations(self):
         result = combinations([1, 5, 10, 25], 8)
         self.assertEqual(len(result), 2)
 
+        result2 = combinations([1, 2], 3)
+
+        self.assertEqual(len(result2), 2)
