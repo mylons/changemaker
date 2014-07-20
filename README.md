@@ -113,7 +113,7 @@ for the sake of optimization.
 The run time of ```ChangeMaker.count_change(amount)``` is, at the worst case, O(n^2), where n is the number of coins. 
 I say this because, count_change loops over the coins, and for each coin calls combinations, which in turn iterates
 over each coin. So, there is some set of inputs (like using the max number of coins, and then the max amount of change) 
-that will force this behavior, but I argue that n^2 is an upper bound, and 
+that will force this behavior, but n^2 is an upper bound, and 
 even then the number of executions is somewhere in the ballpark of <1,000,000 due to the recursion limit.
 
 I thought about trying a more efficient approach to ```ChangeMaker.count_change(#)```, but due to the
