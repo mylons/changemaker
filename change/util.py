@@ -67,7 +67,7 @@ class ChangeMaker:
                 yield solution
             # no combination possible
             elif sum(solution) > amount or coins == []:
-                pass
+                return
             # create every possible combination
             else:
                 for coin_combo in helper(coins[:], (solution + [coins[0]])):
