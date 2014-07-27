@@ -13,8 +13,7 @@ class ChangeMaker:
         # sort coins into ascending order so we can
         # use a list as a stack and just self._coins.pop()
         # to get the next largest value
-        coins.sort()
-        self._coins = coins
+        self._coins = sorted(coins)
 
     def change(self, amount):
         """
@@ -23,56 +22,58 @@ class ChangeMaker:
         :param amount: amount to make change
         :return: list of lists of ints
         """
-        # for each combination
-        #return combinations(self._coins[:], amount)
-        values = self._coins[:]  # copy the coins, this is deleterious
-        results = []
-        while values:
-            result = self._combinations(values[:], amount)
-            if result and sum(result) == amount:
-                # remove the biggest to attempt another combination
-                values.remove(max(result))
-                results.append(result)
-            else:
-                """
-                nothing more to be done here
-                optimizes the function slightly
-                by not performing unecessary traversals through
-                the values list
-                """
-                return results
-        # exhausted values, and helper consistently returned results
-        return results
+        # create the list from the generator
+        return [c for c in self._combinations(amount)]
 
     def count_change(self, amount):
         """
         returns the total # of ways to make change with this amount
+        runs in O(N*M) time.
+
+        Similar to a power set, in the sense that it goes through
+        all combinations and adds a coin to each one
         :param amount:
         :return:
         """
-        # completely unoptimized
-        return len(self.change(amount))
+        # initialize set
+        solutions = [1]
+        solutions += [0] * (amount + 1)
 
-    def _combinations(self, values, total):
+        for coin in self._coins:
+            # for all possible amounts from this coin to
+            # the final amount
+            for x in xrange(coin, amount + 1):
+                # tally up the # of ways
+                solutions[x] += solutions[x - coin]
+
+        return solutions[amount]
+
+    def _combinations(self, amount):
         """
-        finds combinations of coins that sum to total
-        :param values: list of integers
-        :param total: the sum the combination should sum to
-        :return: list of lists of combinations: [[1, 2, 3], [4, 5, 6]]
+        :param amount: to generate change combinations for
+        :return: generator for list of lists of all combinations of change
         """
-        if total <= 0:
-            # base case is an empty list
-            # (adding an empty list to a list does nothing in python)
-            return []
-        elif values:  # still more coins to try
-            value = values[-1]
-            if value <= total:
-                number_of_cells = total / value
-                return ([value] * number_of_cells) + self._combinations(values, total - (value * number_of_cells))
-            elif value > total:  # another case where the coin is too big
-                # coin is too big, pop it off
-                values.pop()
-                return [] + self._combinations(values, total)
-        else:  # the other base case, no more coins
-            return []
+        def helper(coins, solution):
+            """
+            helper function to ease the recursion and make the
+            api to _combinations simpler
+            :param coins: list of coins to combine
+            :param solution: the eventual list containing the solution
+            :return: generator to create the list of lists
+            """
+            # test this combination to see if we've found a
+            # potential solution
+            if sum(solution) == amount:
+                yield solution
+            # no combination possible
+            elif sum(solution) > amount or coins == []:
+                pass
+            # create every possible combination
+            else:
+                for coin_combo in helper(coins[:], (solution + [coins[0]])):
+                    yield coin_combo
+                for coin_combo in helper(coins[1:], solution):
+                    yield coin_combo
+        # start up the recursion
+        return helper(self._coins, [])
 

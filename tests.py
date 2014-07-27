@@ -24,17 +24,19 @@ class ChangeMakerTests(TestCase):
         l1, l2 = lists
         self.assertEqual(sum(l1), 8)
         self.assertEqual(sum(l2), 8)
-        self.assertEqual(l1.index(5) >= 0 or l2.index(5) >= 0, True)
+        self.assertEqual(l1.count(5) > 0 or l2.count(5) > 0, True)
 
     def test_count_change(self):
         self.assertEqual(self.us_coins.count_change(8), 2)
+        self.assertEqual(self.us_coins.count_change(25), 13)
         self.assertEqual(self.us_no_penny.count_change(8), 0)
 
     def test_combinations(self):
-        result = self.small._combinations([1, 5, 10, 25], 8)
-        self.assertListEqual(sorted(result), [1, 1, 1, 5])
+        # using sorted to guarantee order
+        result = self.us_coins._combinations(8)
+        self.assertListEqual(sorted(result), sorted([[1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 5]]))
 
-        result = self.small._combinations([1, 2], 3)
-        self.assertListEqual(sorted(result), [1, 2])
+        result = self.small._combinations(3)
+        self.assertListEqual(sorted(result), sorted([[1, 1, 1], [1, 2]]))
 
 
