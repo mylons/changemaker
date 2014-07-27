@@ -74,73 +74,46 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 #### General Design
 I chose to be minimalistic in my approach to this. The problem states returning primitives and 
-built in data structures instead of built types. Also, since the logic of the combinations function
-is geared towards a list input of integers, and a sum to achieve, it seems pretty specific to the 
-change problem. It is written in a way that the function could be graduated to it's own
-module/class, etc.
+built in data structures instead of built types. 
 
 #### Recursion 
-I decided to do this recursively, because it's an interview question. You have to show off a little bit,
-if you can. This in turn exposed something I rarely run into in python, the recursion limit! Also, this 
-is one of those classic problems that lends itself well to a recursive solution. IFF the problem statement
-required a large number of coins as input, would I have considered doing it iteratively.
+I decided to do change() recursively, because it's an interview question, you have to show off a little bit.
 
-The initial combinations function was completely recursive ( https://github.com/mylons/changemaker/commit/97b3d9de257e9987c1932e27afc8015df3686c86 ). It would recurse in the subtraction
-from the total amount, and in traversing the list of input integers. I like solutions like these
-because if the language supports something like Tail Recursion, it can optimize away the
-seemingly inefficient, yet more elegant code.
+The initial combinations function was completely recursive, and actually a greedy implementation:
+ ( https://github.com/mylons/changemaker/commit/97b3d9de257e9987c1932e27afc8015df3686c86 ). 
+It would recurse in the subtraction from the total amount, and in traversing the list of input integers. I like 
+solutions like these because if the language supports something like Tail Recursion, it can optimize away the
+seemingly inefficient, yet more elegant code. However, a greedy implementation wont satisfy an exhaustive list of all
+change combinations.
 
-This is a problem in cases where you have something like this:
-```
-    coins = [1, 5, 10, 25]
-    change = 1000
-```
-The final combination of ways to make change is a list of 1's in this case,
-and it would recurse 1000 times to perform this. It's easily optimized out by taking advantage of python's
-[1] * 1000, and then remove that total sum from the input to the next call to ```_combinations()``` removes basically
-997 calls to that function (1000 - 3 attempts via 5, 10, 25 being tried first).
-
-Therefore the combinations function can take an input of ~500-900 unique integers, depending on the change to calculate. 
-There is no currency I know of that has support for this number of unique denominations. Therefore, I'm assuming
-this is OK. 
-
-Python doesn't support Tail Recursion, and maybe never will: http://neopythonic.blogspot.com.au/2009/04/tail-recursion-elimination.html
+Python also doesn't support Tail Recursion, and maybe never will: http://neopythonic.blogspot.com.au/2009/04/tail-recursion-elimination.html
 
 The official advice is to move to an iterative solution if you're traversing large lists. Doing that would allow
 this solution to expand, but it would expand outside of the problem domain, in my opinion. Sort of like over optimizing
 for the sake of optimization.
-#### Run Time and Efficiency
-The run time of ```ChangeMaker.count_change(amount)``` is, at the worst case, O(n^2), where n is the number of coins. 
-I say this because, count_change loops over the coins, and for each coin calls combinations, which in turn iterates
-over each coin. So, there is some set of inputs (like using the max number of coins, and then the max amount of change) 
-that will force this behavior, but n^2 is an upper bound, and 
-even then the number of executions is somewhere in the ballpark of <1,000,000 due to the recursion limit.
-
-I thought about trying a more efficient approach to ```ChangeMaker.count_change(#)```, but due to the
-recursion limit, combinations can only recurse 1000 times, and realistically will only be called
-~10 times in a real world scenario?
-
-I also copy the ```ChangeMaker._coins``` list in the call to ```_combinations()```. The reason for this
-is that you can use the list as a stack in the ```_combinations()``` function which makes 
-managing handling the coins much simpler. This, again, shouldn't be a huge cost because the list is only
-going to be <1000 integers. 
-
-The space requirements will grow linearly with the amount of change to return.
-
-I thought empirical testing would be interesting to see how the memory grows.  
-```
->>> import sys
->>> cm = ChangeMaker([i for i in range(1, 998)])
->>> a = cm.change(900)
->>> sys.getsizeof(a)
-7992
->>> a = cm.change(450)
->>> sys.getsizeof(a)
-3768
->>> 3768.0 / 7992.0 
-0.47147147147147145
-```
-It seems to grow slightly less than linear! 
 
 
+#### Algorithm, Run Time and Efficiency Discussion
+The current implementation of ```_combinations()``` will attempt to generate every possible combination of coins, 
+with repeats, until the sum of the amount to change is achieved. Once such a solution exists, it's yielded. I chose to
+use generators to assist in the recursion limits in python, and to use less of a memory footprint in the 
+```_combinations()``` function. ```change()``` will still create all of the solution lists, in the worst case. 
+This solution is potentially O(N^2*M), due to the complexity of generating all of the lists. The first for loop 
+yielding coin_combo's is going to create the base case (eventually):
+a list of [1, 1,...1], and every other possibility of a repeated coin list. 
+There are some early iteration termination cases that should reduce the search space: 
+* sum of the current list of coins is the desired amount
+* sum has exceeded the current amount
+* there are no more coins to attempt (worst case)
 
+The memory required is going to be proportional to the depth of the recursion. Each recursive call to helper copies the
+coin list, and also creates a new list in the first call. The recursion is going to be exponential as pointed out above,
+therefore the memory will be too.
+
+The run time of ```ChangeMaker.count_change(amount)``` is, at the worst case, O(N*M). The function iterates over each 
+coin (N), and then over a range from coin value to the end of the list, which is amount + 1 and (M). There is no extra
+space required in memory, except amount + 1 integers.
+
+I decided on a more efficient approach to ```ChangeMaker.count_change(#)```, due to the
+limitations of the existing ```change()``` function. change() can't realistically be used for very very large amounts
+of change, but count_change() can, so long as O(N*M) is acceptable run time.

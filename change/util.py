@@ -63,17 +63,21 @@ class ChangeMaker:
             """
             # test this combination to see if we've found a
             # potential solution
-            if sum(solution) == amount:
+            the_sum = sum(solution)
+            if the_sum == amount:
                 yield solution
             # no combination possible
-            elif sum(solution) > amount or coins == []:
+            elif the_sum > amount or not coins:
                 return
             # create every possible combination
             else:
-                # this generator allows for multiples of the same coin
+                # this generator creates every combination for multiples of the same coin runs for every duplicate coin
+                # it can until the sum is reached, exceeded, or there are no more coins.
+                # worst case is O(M) where M is number of lists of repeated coins to achieve the sum.
                 for coin_combo in helper(coins[:], (solution + [coins[0]])):
                     yield coin_combo
-                # this generator is the iterator through the list
+                # this generator is the iterator through the list, and as a result will cause a
+                # O(N^2*M) solution
                 for coin_combo in helper(coins[1:], solution):
                     yield coin_combo
         # start up the recursion
