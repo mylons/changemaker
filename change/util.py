@@ -53,7 +53,7 @@ class ChangeMaker:
         :param amount: to generate change combinations for
         :return: generator for list of lists of all combinations of change
         """
-        def helper(coins, solution):
+        def helper(coins, solution=[]):
             """
             helper function to ease the recursion and make the
             api to _combinations simpler
@@ -70,10 +70,12 @@ class ChangeMaker:
                 return
             # create every possible combination
             else:
+                # this generator allows for multiples of the same coin
                 for coin_combo in helper(coins[:], (solution + [coins[0]])):
                     yield coin_combo
+                # this generator is the iterator through the list
                 for coin_combo in helper(coins[1:], solution):
                     yield coin_combo
         # start up the recursion
-        return helper(self._coins, [])
+        return helper(self._coins)
 
